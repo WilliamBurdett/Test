@@ -41,7 +41,6 @@ BinTree::BinTree(){
 }
 
 BinTree::BinTree(const BinTree & tree){
-	makeEmpty();
 	root = copyHelper(tree.root);
 }
 
@@ -70,10 +69,18 @@ bool BinTree::isEmpty() const{
 
 void BinTree::makeEmpty(){
 	//cout << "@@ CALLING MAKE EMPTY() @@" << endl;
-	makeEmptyHelper(root);
-	root = new Node();
-	root->left=NULL;
+	if(root->left!=NULL){
+		makeEmptyHelper(root->left);
+	}
+	if(root->right!=NULL){
+		//cout << "## GOING RIGHT makeEmpty" << endl;
+		if(root->right == NULL){
+			//cout << "ROOT RIGHT IS NULL" << endl;
+		}
+		makeEmptyHelper(root->right);
+	}
 	root->right=NULL;
+	root->left=NULL;
 	root->data=NULL;
 	//cout << "@@ TERMINATING MAKE EMPTY() @@" << endl;
 }
@@ -98,15 +105,15 @@ bool BinTree::operator==(const BinTree& right) const{
 	cout << "@@ CALLING operator== @@" << endl;
 	Node *leftCurr = root;
 	Node *rightCurr = right.root;
-	if(root->data==NULL && right.root->data==NULL){
+	if(leftCurr->data==NULL && rightCurr->data==NULL){
 		return true;
 	}
-	else if((root->data==NULL && right.root->data!=NULL) || (root->data!=NULL 
-				&& right.root->data==NULL)){
+	else if((leftCurr->data==NULL && rightCurr->data!=NULL) || (leftCurr->data!=NULL 
+				&& rightCurr->data==NULL)){
 		return false;
 	}
-	cout << "comparing " << *root->data << " to " << *right.root->data << endl;
-	if(*root->data!=*right.root->data){
+	cout << "comparing " << *leftCurr->data << " to " << *rightCurr->data << endl;
+	if(*leftCurr->data!=*rightCurr->data){
 		cout << "@@ TERMINATING operator== @@" << endl;
 		return false;
 	}
@@ -133,37 +140,16 @@ bool BinTree::equalOperatorHelper(const Node *leftCurr, const Node *rightCurr) c
 		}
 	}
 }
-/*
-bool BinTree::operator==(const BinTree& right) const{
-	cout << "@@ CALLING operator== @@" << endl;
-	return equalOperatorHelper(root, right.root);
-}
-
-bool BinTree::equalOperatorHelper(const Node *leftCurr, const Node *rightCurr) const{
-	cout << "@@ CALLING equalOperatorHelper @@" << endl;
-	if(leftCurr==NULL){
-		return rightCurr==NULL;
-	}
-	if(rightCurr==NULL){
-		return false;
-	}
-	if(*leftCurr->data!=*rightCurr->data){
-		return false;
-	}
-	return equalOperatorHelper(leftCurr->left, rightCurr->left) && 
-			equalOperatorHelper(leftCurr->right, rightCurr->right);
-}*/
 
 bool BinTree::operator!=(const BinTree & right) const{
-	cout << "@@ CALLING operator!= @@" << endl;
-	return !(*this==right);
+	return true;
 }
 
 bool BinTree::insert(NodeData * data){
 	cout << "@@ CALLING INSERT @@" << endl;
 	cout << *data << endl;
-	cout << "## checking if root is null ##" << endl;
 	if(root->data==NULL){
+	cout << "## checking if root is null ##" << endl;
 		root->data = data;
 		return true;
 	}
